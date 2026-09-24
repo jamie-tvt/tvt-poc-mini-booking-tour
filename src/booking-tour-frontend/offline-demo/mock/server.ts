@@ -6,6 +6,7 @@
 import * as store from "./db";
 import type { Booking, DB, Departure, Payment, Tour, User } from "./db";
 import { imageUrl } from "./images";
+import { fold } from "./fold";
 import type { BookingStatus, DepartureStatus, PaymentStatus, Role, TourStatus } from "@/types/domain";
 
 const DAY = 86_400_000;
@@ -114,19 +115,30 @@ function departureDto(db: DB, d: Departure) {
 }
 
 const isPublic = (t: Tour) => t.status === "ACTIVE";
+
+const foldKeyword = (v: string | null) => {
+  const kw = blank(v);
+  return kw ? fold(kw) : undefined;
+};
 const openUpcoming = (db: DB, tourId: number, now: number) =>
   db.departures.filter((d) => d.tourId === tourId && d.status === "OPEN" && d.startAt > now).sort((a, b) => a.startAt - b.startAt);
 
-function tourSummary(db: DB, t: Tour, now: number) {
+/** range: đang lọc theo ngày → nextDepartureAt là đợt đầu tiên NẰM TRONG khoảng (≈ TourService.summarize). */
+function tourSummary(db: DB, t: Tour, now: number, range?: { from?: number; to?: number }) {
   const ds = openUpcoming(db, t.id, now);
   const withSeats = ds.filter((d) => d.capacity - d.bookedSeats > 0);
+  let next = withSeats[0]?.startAt;
+  if (range && (range.from !== undefined || range.to !== undefined)) {
+    const inRange = ds.filter((d) => (range.from === undefined || d.startAt >= range.from) && (range.to === undefined || d.startAt <= range.to));
+    next = (inRange.find((d) => d.capacity - d.bookedSeats > 0) ?? inRange[0])?.startAt;
+  }
   const rs = db.reviews.filter((r) => r.tourId === t.id && r.status === "VISIBLE");
   const cat = byId(db.categories, t.categoryId);
   return {
     id: t.id, tourCode: t.tourCode, title: t.title, destination: t.destination, durationDays: t.durationDays, price: t.price,
     fromPrice: withSeats.length ? Math.min(...withSeats.map((d) => d.adultPrice)) : t.price,
     coverImageUrl: imageUrl(t.coverImageUrl), categoryId: t.categoryId, categoryName: cat?.name ?? "—", status: t.status,
-    nextDepartureAt: iso(withSeats[0]?.startAt), openDepartureCount: ds.length,
+    nextDepartureAt: iso(next), openDepartureCount: ds.length,
     availableSeats: ds.reduce((s, d) => s + d.capacity - d.bookedSeats, 0),
     ratingAverage: rs.length ? Math.round((rs.reduce((s, r) => s + r.rating, 0) / rs.length) * 10) / 10 : undefined,
     ratingCount: rs.length,
@@ -394,7 +406,7 @@ on("PUT", "/users/me", (c) => {
 
 // ---- 4.2 Tour
 on("GET", "/tours", ({ db, now, query }) => {
-  const kw = blank(query.get("keyword"))?.toLowerCase();
+  const kw = foldKeyword(query.get("keyword"));
   const categoryId = Number(query.get("categoryId")) || undefined;
   const minPrice = query.get("minPrice") ? Number(query.get("minPrice")) : undefined;
   const maxPrice = query.get("maxPrice") ? Number(query.get("maxPrice")) : undefined;
@@ -413,7 +425,7 @@ on("GET", "/tours", ({ db, now, query }) => {
   const to = dayStart(query.get("departTo"), true);
   let list = db.tours.filter((t) => {
     if (!isPublic(t)) return false;
-    if (kw && ![t.title, t.destination, t.tourCode].some((s) => s.toLowerCase().includes(kw))) return false;
+    if (kw && ![t.title, t.destination, t.tourCode].some((s) => fold(s).includes(kw))) return false;
     if (categoryId && t.categoryId !== categoryId) return false;
     if (minPrice !== undefined && t.price < minPrice) return false;
     if (maxPrice !== undefined && t.price > maxPrice) return false;
@@ -424,7 +436,7 @@ on("GET", "/tours", ({ db, now, query }) => {
     return true;
   });
   const sort = query.get("sort") ?? "nextDeparture";
-  const sums = new Map(list.map((t) => [t.id, tourSummary(db, t, now)]));
+  const sums = new Map(list.map((t) => [t.id, tourSummary(db, t, now, { from, to })]));
   if (sort === "price,asc") list = list.sort((a, b) => a.price - b.price || a.id - b.id);
   else if (sort === "price,desc") list = list.sort((a, b) => b.price - a.price || a.id - b.id);
   else if (sort === "nextDeparture") {
@@ -442,10 +454,10 @@ on("GET", "/tours/:id", ({ db, now, me, params }) => {
 
 on("GET", "/manager/tours", (c) => {
   requireUser(c, STAFF);
-  const kw = blank(c.query.get("keyword"))?.toLowerCase();
+  const kw = foldKeyword(c.query.get("keyword"));
   const status = blank(c.query.get("status")) as TourStatus | undefined;
   const list = c.db.tours
-    .filter((t) => (!status || t.status === status) && (!kw || t.title.toLowerCase().includes(kw) || t.tourCode.toLowerCase().includes(kw)))
+    .filter((t) => (!status || t.status === status) && (!kw || fold(t.title).includes(kw) || fold(t.tourCode).includes(kw)))
     .sort((a, b) => b.updatedAt - a.updatedAt || b.id - a.id);
   return page(list, c.query, (t) => tourSummary(c.db, t, c.now));
 });
@@ -723,14 +735,14 @@ on("GET", "/admin/bookings", (c) => {
   requireUser(c, STAFF);
   const status = blank(c.query.get("status")) as BookingStatus | undefined;
   const departureId = Number(c.query.get("departureId")) || undefined;
-  const kw = blank(c.query.get("keyword"))?.toLowerCase();
+  const kw = foldKeyword(c.query.get("keyword"));
   const list = c.db.bookings
     .filter((b) => {
       if (status && b.status !== status) return false;
       if (departureId && b.departureId !== departureId) return false;
       if (kw) {
         const u = byId(c.db.users, b.userId)!;
-        if (![b.bookingCode, u.fullName, u.email].some((s) => s.toLowerCase().includes(kw))) return false;
+        if (![b.bookingCode, u.fullName, u.email].some((s) => fold(s).includes(kw))) return false;
       }
       return true;
     })
@@ -944,10 +956,10 @@ on("GET", "/admin/dashboard", (c) => {
 });
 on("GET", "/admin/users", (c) => {
   requireUser(c, ["ADMIN"]);
-  const kw = blank(c.query.get("keyword"))?.toLowerCase();
+  const kw = foldKeyword(c.query.get("keyword"));
   const role = blank(c.query.get("role"));
   const list = c.db.users
-    .filter((u) => (!role || u.role === role) && (!kw || u.fullName.toLowerCase().includes(kw) || u.email.toLowerCase().includes(kw)))
+    .filter((u) => (!role || u.role === role) && (!kw || fold(u.fullName).includes(kw) || fold(u.email).includes(kw)))
     .sort((a, b) => b.createdAt - a.createdAt || b.id - a.id);
   return page(list, c.query, userDto);
 });

@@ -7,6 +7,8 @@ import com.tourbooking.domain.common.TimeProvider;
 import com.tourbooking.domain.departure.TourDeparture;
 import com.tourbooking.domain.tour.*;
 import com.tourbooking.infrastructure.persistence.jpa.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.persistence.criteria.Subquery;
@@ -59,11 +61,11 @@ public class TourService {
                 default -> Sort.by("createdAt").descending();
             };
             Page<Tour> p = tours.findAll(spec, PageRequest.of(page, size, s.and(Sort.by("id"))));
-            return new PageImpl<>(summarize(p.getContent(), now), p.getPageable(), p.getTotalElements());
+            return new PageImpl<>(summarize(p.getContent(), now, f.departFrom(), f.departTo()), p.getPageable(), p.getTotalElements());
         }
         // Sắp theo ngày khởi hành gần nhất: tính từ bảng đợt nên sắp trong bộ nhớ. Danh mục tour nhỏ (vài trăm) nên chấp nhận được;
         // khi lớn thì thêm cột next_departure_at cập nhật theo sự kiện.
-        List<TourSummary> all = summarize(tours.findAll(spec), now);
+        List<TourSummary> all = summarize(tours.findAll(spec), now, f.departFrom(), f.departTo());
         all.sort(Comparator.comparing((TourSummary t) -> t.nextDepartureAt() == null ? Instant.MAX : t.nextDepartureAt())
                 .thenComparing(t -> t.tour().getId()));
         int from = Math.min(page * size, all.size());
@@ -75,8 +77,8 @@ public class TourService {
             List<Predicate> ps = new ArrayList<>();
             ps.add(cb.equal(root.get("status"), TourStatus.ACTIVE));
             if (f.keyword() != null && !f.keyword().isBlank()) {
-                String like = "%" + f.keyword().trim().toLowerCase() + "%";
-                ps.add(cb.or(cb.like(cb.lower(root.get("title")), like), cb.like(cb.lower(root.get("destination")), like),
+                String like = "%" + foldD(f.keyword()) + "%";
+                ps.add(cb.or(cb.like(foldD(cb, root.get("title")), like), cb.like(foldD(cb, root.get("destination")), like),
                         cb.like(cb.lower(root.get("tourCode")), like)));
             }
             if (f.categoryId() != null) ps.add(cb.equal(root.get("category").get("id"), f.categoryId()));
@@ -98,7 +100,13 @@ public class TourService {
         };
     }
 
-    List<TourSummary> summarize(List<Tour> list, Instant now) {
+    List<TourSummary> summarize(List<Tour> list, Instant now) { return summarize(list, now, null, null); }
+
+    /**
+     * Có lọc theo ngày (from/to) thì nextDepartureAt = đợt mở bán đầu tiên NẰM TRONG khoảng lọc (ưu tiên đợt còn chỗ),
+     * để thẻ tour không hiện ngày ngoài khoảng người dùng vừa chọn. Giá "từ" và tổng chỗ trống giữ theo mọi đợt.
+     */
+    List<TourSummary> summarize(List<Tour> list, Instant now, Instant from, Instant to) {
         if (list.isEmpty()) return new ArrayList<>();
         Set<Long> ids = list.stream().map(Tour::getId).collect(Collectors.toSet());
         Map<Long, List<TourDeparture>> open = departures.findOpenUpcomingForTours(ids, now).stream()
@@ -110,6 +118,12 @@ public class TourService {
             List<TourDeparture> withSeats = ds.stream().filter(d -> d.availableSeats() > 0).toList();
             long fromPrice = withSeats.stream().mapToLong(TourDeparture::getAdultPrice).min().orElse(t.getPrice());
             Instant next = withSeats.stream().map(TourDeparture::getStartAt).findFirst().orElse(null);
+            if (from != null || to != null) {
+                List<TourDeparture> inRange = ds.stream().filter(d -> (from == null || !d.getStartAt().isBefore(from))
+                        && (to == null || !d.getStartAt().isAfter(to))).toList();
+                next = inRange.stream().filter(d -> d.availableSeats() > 0).map(TourDeparture::getStartAt).findFirst()
+                        .orElse(inRange.isEmpty() ? null : inRange.get(0).getStartAt());
+            }
             int seats = ds.stream().mapToInt(TourDeparture::availableSeats).sum();
             Object[] r = ratings.get(t.getId());
             out.add(new TourSummary(t, fromPrice, next, ds.size(), seats,
@@ -137,8 +151,8 @@ public class TourService {
             List<Predicate> ps = new ArrayList<>();
             if (status != null) ps.add(cb.equal(root.get("status"), status));
             if (keyword != null && !keyword.isBlank()) {
-                String like = "%" + keyword.trim().toLowerCase() + "%";
-                ps.add(cb.or(cb.like(cb.lower(root.get("title")), like), cb.like(cb.lower(root.get("tourCode")), like)));
+                String like = "%" + foldD(keyword) + "%";
+                ps.add(cb.or(cb.like(foldD(cb, root.get("title")), like), cb.like(cb.lower(root.get("tourCode")), like)));
             }
             return cb.and(ps.toArray(Predicate[]::new));
         };
@@ -222,4 +236,14 @@ public class TourService {
     }
 
     private static String blank(String s) { return s == null || s.isBlank() ? null : s.trim(); }
+
+    /*
+     * Tìm không dấu: cột utf8mb4_unicode_ci đã so khớp bỏ dấu ("phu quoc" = "Phú Quốc") nhưng coi "đ" ≠ "d"
+     * (TourSearchIT). Đổi đ → d ở cả hai vế rồi để collation lo phần dấu còn lại.
+     */
+    static String foldD(String keyword) { return keyword.trim().toLowerCase().replace('đ', 'd'); }
+
+    private static Expression<String> foldD(CriteriaBuilder cb, Expression<String> column) {
+        return cb.function("replace", String.class, cb.lower(column), cb.literal("đ"), cb.literal("d"));
+    }
 }

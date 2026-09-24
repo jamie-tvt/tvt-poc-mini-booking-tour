@@ -41,6 +41,10 @@ document.addEventListener("click", (e) => {
 
 if (!window.location.hash.startsWith("#/")) history.replaceState(null, "", "#/");
 
+// Chừa chỗ dưới đáy trang cho nút DEMO nổi (không che nội dung cuối trang / footer);
+// trang có thanh CTA dính đáy trên mobile thì chừa thêm vì nút nằm phía trên thanh.
+document.body.classList.add("pb-16", "max-lg:has-[.sticky-cta]:pb-40");
+
 createRoot(document.getElementById("root")!, {
   // redirect()/notFound() là tín hiệu điều hướng (như Next), router đã xử lý — không log thành lỗi
   onCaughtError(error, info) {

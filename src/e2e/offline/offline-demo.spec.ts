@@ -47,7 +47,7 @@ test("trang công khai: trang chủ, tìm kiếm, chi tiết tour", async ({ pag
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Phú Quốc");
   await expect(page.getByText("Lịch trình", { exact: true })).toBeVisible();
   await expect(page.getByText(/Lịch trình hợp lý, khách sạn sạch/)).toBeVisible(); // đánh giá có sẵn
-  const img = page.locator("img").first();
+  const img = page.getByRole("img", { name: /Ảnh minh hoạ tour/ });
   await expect(img).toHaveJSProperty("complete", true);
   expect(await img.evaluate((i: HTMLImageElement) => i.naturalWidth)).toBeGreaterThan(0);
   expect(errors).toEqual([]);
@@ -192,4 +192,84 @@ test("bảng DEMO: tự mở lần đầu, đổi vai trò 1 chạm", async ({ p
   await panel.getByRole("button", { name: /Hướng dẫn viên · Trần Quốc Hưng/ }).click();
   await expect(page).toHaveURL(/#\/operator\/tours/);
   await expect(page.getByText(/Cái Răng/).first()).toBeVisible();
+});
+
+test("F1: tìm không dấu \"phu quoc\" / \"can tho\" ra tour có dấu", async ({ page }) => {
+  const errors = watchErrors(page);
+  await go(page, "/tours");
+  await page.getByLabel("Từ khoá").fill("phu quoc");
+  await page.getByRole("button", { name: /Áp dụng bộ lọc/ }).click();
+  await expect(page).toHaveURL(/keyword=phu\+quoc/);
+  await expect(page.getByText(/Tìm thấy/)).toContainText("1");
+  await expect(page.getByRole("link", { name: /Phú Quốc – Nam đảo/ })).toBeVisible();
+
+  await go(page, "/tours?keyword=can%20tho");
+  await expect(page.getByText(/Tìm thấy/)).toContainText("2"); // Cái Răng + Cồn Sơn (Cần Thơ)
+  await go(page, "/tours?keyword=CHO%20NOI");
+  await expect(page.getByRole("link", { name: /Chợ nổi Cái Răng/ })).toBeVisible();
+  expect(errors).toEqual([]);
+});
+
+test("F2: lọc theo khoảng ngày → thẻ tour hiện ngày khởi hành nằm trong khoảng", async ({ page }) => {
+  // Seed: mỗi tour có đợt ở +10, +24, +38 ngày → lọc +20..+30 thì thẻ phải hiện đợt +24
+  const ymd = (d: number) => new Date(Date.now() + d * 86_400_000).toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
+  const vn = (d: number) => ymd(d).split("-").reverse().join("/");
+  await go(page, `/tours?departFrom=${ymd(20)}&departTo=${ymd(30)}`);
+  await expect(page.getByText(/Tìm thấy/)).toContainText("7");
+  const cards = page.getByRole("article");
+  await expect(cards.first()).toContainText(`Khởi hành ${vn(24)}`);
+  await expect(page.getByText(`Khởi hành ${vn(10)}`)).toHaveCount(0);
+});
+
+test("mobile: bộ lọc gọn — bottom sheet, chip bỏ lọc, nút DEMO không che thanh CTA", async ({ browser }) => {
+  const ctx = await browser.newContext({ viewport: { width: 375, height: 812 }, isMobile: true, hasTouch: true });
+  const page = await ctx.newPage();
+  const errors = watchErrors(page);
+  await go(page, "/");
+  await page.evaluate(() => localStorage.setItem("bt.demo.panel-seen", "1"));
+  await go(page, "/tours");
+
+  // Kết quả đầu tiên hiện ngay màn hình đầu
+  const firstCard = page.getByRole("article").first();
+  await expect(firstCard).toBeVisible();
+  expect((await firstCard.boundingBox())!.y).toBeLessThan(812);
+
+  const openBtn = page.getByRole("button", { name: /^Bộ lọc/ });
+  await openBtn.click();
+  const sheet = page.getByRole("dialog", { name: "Bộ lọc" });
+  await expect(sheet).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(sheet).toBeHidden();
+  await expect(openBtn).toBeFocused();
+
+  await openBtn.click();
+  await sheet.getByRole("button", { name: "Sông nước miền Tây" }).click();
+  await sheet.getByLabel("Giá từ (₫)").fill("900000");
+  await sheet.getByLabel("Giá đến (₫)").fill("500000");
+  await sheet.getByRole("button", { name: /^Xem/ }).click();
+  await expect(sheet.getByRole("alert")).toContainText("Giá tối thiểu");
+  await sheet.getByLabel("Giá từ (₫)").fill("");
+  await sheet.getByLabel("Giá đến (₫)").fill("2000000");
+  await expect(sheet.getByRole("button", { name: "Xem 2 tour" })).toBeVisible();
+  await sheet.getByRole("button", { name: "Xem 2 tour" }).click();
+  await expect(sheet).toBeHidden();
+  await expect(page.getByText(/Tìm thấy/)).toContainText("2");
+  await expect(page.getByRole("button", { name: "Bộ lọc (2)" })).toBeVisible();
+
+  await page.getByRole("button", { name: /Bỏ lọc Sông nước/ }).click();
+  await expect(page).not.toHaveURL(/categoryId=/);
+  await expect(page.getByRole("button", { name: "Bộ lọc (1)" })).toBeVisible();
+
+  // Chi tiết: thanh CTA dính đáy, nút DEMO tròn nằm phía trên thanh
+  await go(page, "/tours/6");
+  const bar = page.locator(".sticky-cta");
+  await expect(bar).toBeVisible();
+  const demo = page.getByRole("button", { name: "Mở hướng dẫn demo" });
+  const [b, d] = [(await bar.boundingBox())!, (await demo.boundingBox())!];
+  expect(d.width).toBeGreaterThanOrEqual(44);
+  expect(d.y + d.height).toBeLessThanOrEqual(b.y);
+  await bar.getByRole("link", { name: "Chọn đợt" }).click();
+  await expect(page.getByRole("heading", { name: "Lịch khởi hành" })).toBeInViewport();
+  expect(errors).toEqual([]);
+  await ctx.close();
 });

@@ -24,6 +24,8 @@
   --color-danger: #b91c1c;
   --color-danger-hover: #991b1b;
   --color-danger-soft: #fbe5e5;
+  /* Nền tối cho gradient đè ảnh hero (chữ trắng ≥ 4.5:1) — lấy từ mockup nền ảnh mờ 24/09/2026 */
+  --color-night: #032234;
 
   --font-heading: var(--font-be-vietnam-pro), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-noto-sans), ui-sans-serif, system-ui, sans-serif;
@@ -31,6 +33,8 @@
   --shadow-card: 0 4px 6px rgba(12, 74, 110, 0.08);
   --shadow-pop: 0 10px 15px rgba(12, 74, 110, 0.12);
   --shadow-modal: 0 20px 25px rgba(0, 0, 0, 0.15);
+  --shadow-glass: 0 8px 24px rgba(12, 74, 110, 0.12);
+  --shadow-float: 0 12px 30px rgba(3, 34, 52, 0.28);
 }
 
 @layer base {
@@ -89,6 +93,64 @@
       linear-gradient(135deg, #075985 0%, #0369a1 45%, #0c4a6e 100%);
     background-size: 160% 160%;
     animation: aurora-shift 12s ease-in-out infinite alternate;
+  }
+}
+
+@layer components {
+  /* Kính mờ: thẻ đè lên ảnh/nền mờ (form tìm kiếm hero, thông tin chính trang chi tiết, thanh CTA dính đáy) */
+  .glass {
+    background-color: rgb(255 255 255 / 0.72);
+    -webkit-backdrop-filter: blur(16px) saturate(1.2);
+    backdrop-filter: blur(16px) saturate(1.2);
+    border: 1px solid rgb(255 255 255 / 0.6);
+    box-shadow: var(--shadow-glass);
+    border-radius: 16px;
+  }
+  /* Nhãn dạng viên thuốc trên nền mờ */
+  .pill-glass {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    border-radius: 999px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-ink);
+    background-color: rgb(255 255 255 / 0.75);
+    border: 1px solid rgb(255 255 255 / 0.8);
+  }
+  /* Trang có thanh CTA dính đáy (mobile) → chừa chỗ để không che nội dung/footer */
+  @media (width < 64rem) {
+    body:has(.sticky-cta) {
+      padding-bottom: 5.5rem;
+    }
+  }
+}
+
+/* Người dùng tắt hiệu ứng trong suốt → nền đặc, bỏ ảnh mờ */
+@media (prefers-reduced-transparency: reduce) {
+  .photo-backdrop__img {
+    display: none;
+  }
+  .photo-backdrop__veil {
+    background: var(--color-bg);
+  }
+  .glass,
+  .pill-glass {
+    background-color: #ffffff;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+@keyframes sheet-up {
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
   }
 }
 

@@ -24,7 +24,7 @@ export function HeroSearch({ categories }: { categories: CategoryDto[] }) {
       onSubmit={onSubmit}
       role="search"
       aria-label="Tìm tour"
-      className="grid gap-3 rounded-2xl bg-white p-4 text-ink shadow-modal sm:grid-cols-2 lg:grid-cols-[2fr_1.3fr_1.2fr_auto] lg:items-end"
+      className="glass grid gap-3 p-4 text-ink sm:grid-cols-2 sm:p-5 lg:grid-cols-[2fr_1.3fr_1.2fr_auto] lg:items-end"
     >
       <TextField
         id="hero-keyword"

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/layout/Container";
 import { EmptyState } from "@/components/shared/EmptyState";
+import { PhotoBackdrop } from "@/components/shared/PhotoBackdrop";
 import { ErrorState } from "@/components/shared/ErrorState";
 import { LinkButton } from "@/components/ui/Button";
 import { LinkPagination } from "@/components/ui/Pagination";
@@ -29,37 +30,43 @@ export default async function ToursPage({ searchParams }: { searchParams: SP }) 
   const categories = catsRes.status === "fulfilled" ? catsRes.value : [];
   const filterKey = TOUR_FILTER_KEYS.map((k) => params[k] ?? "").join("|");
 
-  return (
-    <Container className="py-8">
-      <h1 className="text-2xl font-bold sm:text-3xl">Danh sách tour</h1>
-      <p className="mt-1 text-ink-soft">Lọc theo điểm đến, giá và ngày khởi hành phù hợp với bạn.</p>
-      <div className="mt-6">
-        <TourFilters key={filterKey} initial={params} categories={categories} />
-      </div>
+  const cover = toursRes.status === "fulfilled" ? toursRes.value.content[0]?.coverImageUrl : undefined;
 
-      <section className="mt-8" aria-live="polite">
-        {toursRes.status === "rejected" ? (
-          <ErrorState message={errorMessage(toursRes.reason, undefined)} />
-        ) : toursRes.value.content.length === 0 ? (
-          <EmptyState
-            title="Không tìm thấy tour phù hợp"
-            description="Thử bỏ bớt điều kiện lọc hoặc đổi khoảng ngày khởi hành."
-            action={<LinkButton href="/tours" variant="secondary">Xoá bộ lọc</LinkButton>}
-          />
-        ) : (
-          <>
-            <p className="mb-4 text-sm text-ink-soft">
-              Tìm thấy <strong className="text-ink">{toursRes.value.totalElements}</strong> tour
-            </p>
-            <TourGrid tours={toursRes.value.content} />
-            <LinkPagination
-              page={toursRes.value.page}
-              totalPages={toursRes.value.totalPages}
-              hrefFor={(p) => `/tours${toQueryString({ ...params, page: p || undefined })}`}
+  return (
+    <div className="relative isolate">
+      {/* Nền đầu trang mờ theo ảnh tour đầu tiên của kết quả, hoà dần vào màu nền trang */}
+      <PhotoBackdrop src={cover} tone="page" className="bottom-auto h-[34rem]" />
+      <Container className="py-6 sm:py-8">
+        <h1 className="text-2xl font-bold sm:text-3xl">Danh sách tour</h1>
+        <p className="mt-1 text-ink-soft">Lọc theo điểm đến, giá và ngày khởi hành phù hợp với bạn.</p>
+        <div className="mt-4 sm:mt-6">
+          <TourFilters key={filterKey} initial={params} categories={categories} />
+        </div>
+
+        <section className="mt-6 lg:mt-8" aria-live="polite">
+          {toursRes.status === "rejected" ? (
+            <ErrorState message={errorMessage(toursRes.reason, undefined)} />
+          ) : toursRes.value.content.length === 0 ? (
+            <EmptyState
+              title="Không tìm thấy tour phù hợp"
+              description="Thử bỏ bớt điều kiện lọc hoặc đổi khoảng ngày khởi hành."
+              action={<LinkButton href="/tours" variant="secondary">Xoá bộ lọc</LinkButton>}
             />
-          </>
-        )}
-      </section>
-    </Container>
+          ) : (
+            <>
+              <p className="mb-4 text-sm text-ink-soft">
+                Tìm thấy <strong className="text-ink">{toursRes.value.totalElements}</strong> tour
+              </p>
+              <TourGrid tours={toursRes.value.content} />
+              <LinkPagination
+                page={toursRes.value.page}
+                totalPages={toursRes.value.totalPages}
+                hrefFor={(p) => `/tours${toQueryString({ ...params, page: p || undefined })}`}
+              />
+            </>
+          )}
+        </section>
+      </Container>
+    </div>
   );
 }

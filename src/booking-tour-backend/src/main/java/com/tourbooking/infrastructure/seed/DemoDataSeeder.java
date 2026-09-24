@@ -34,6 +34,24 @@ public class DemoDataSeeder implements CommandLineRunner {
     private static final Logger log = LoggerFactory.getLogger(DemoDataSeeder.class);
     private static final ZoneId VN = ZoneId.of("Asia/Ho_Chi_Minh");
 
+    /**
+     * Ảnh tour: link CDN Unsplash (Unsplash License — dùng miễn phí, ghi công tác giả).
+     * Mất mạng thì giao diện tự đổi sang SVG minh hoạ cùng tên trong public/images/tours.
+     */
+    private static final Map<String, String> PHOTOS = Map.of(
+            "cai-rang", "photo-1689760661307-ea43aa8114e5",        // Monika Guzikowska
+            "con-son", "photo-1624937195771-358add2e0d9d",         // Trang Trinh
+            "lung-ngoc-hoang", "photo-1589562337460-9d825d2cd5a2", // Mike Swigunski
+            "mui-ca-mau", "photo-1589556183130-530470785fab",      // Timothy K
+            "soc-trang", "photo-1650197404160-8d08f76002c0",       // Mộc Đăng Khoa
+            "phu-quoc", "photo-1732243395944-cb3ff9311091",        // Vivu Vietnam
+            "tra-su", "photo-1580630873708-e0475b1856c4",          // diGital Sennin
+            "bac-lieu", "photo-1729568664729-1f2f44e53320");       // Thompson Le
+
+    static String photoUrl(String slug) {
+        return "https://images.unsplash.com/" + PHOTOS.get(slug) + "?auto=format&fit=crop&w=1200&q=75";
+    }
+
     private final JpaUserRepository users;
     private final JpaUserRoleRepository roles;
     private final JpaTourCategoryRepository categories;
@@ -162,11 +180,11 @@ public class DemoDataSeeder implements CommandLineRunner {
     private Tour tour(String code, String title, String dest, long price, int days, int maxGuests, TourCategory cat, String img,
                       String desc, Instant now, Place... itinerary) {
         Tour t = new Tour(code, now);
-        t.update(code, title, desc, dest, price, days, maxGuests, "/images/tours/" + img + ".svg", cat, now);
+        t.update(code, title, desc, dest, price, days, maxGuests, photoUrl(img), cat, now);
         t.changeStatus(TourStatus.ACTIVE, now);
         t = tours.save(t);
         for (int i = 0; i < itinerary.length; i++) details.save(new TourDetail(t.getId(), itinerary[i], i + 1));
-        images.save(new TourImage(t.getId(), "/images/tours/" + img + ".svg", 0));
+        images.save(new TourImage(t.getId(), photoUrl(img), 0));
         return t;
     }
 

@@ -91,7 +91,11 @@ export function DemoPanel() {
   }
 
   return (
-    <div ref={ref} className="fixed bottom-3 left-3 z-[60] font-sans text-sm text-ink print:hidden">
+    // Mobile: nút tròn 44px; trang có thanh CTA dính đáy (.sticky-cta) thì nút nằm phía trên thanh (bottom-24)
+    <div
+      ref={ref}
+      className="fixed bottom-3 left-3 z-[60] font-sans text-sm text-ink print:hidden max-lg:[body:has(.sticky-cta)_&]:bottom-24"
+    >
       {open && (
         <div
           role="dialog"
@@ -164,9 +168,12 @@ export function DemoPanel() {
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className="inline-flex items-center gap-1.5 rounded-full bg-cta px-3.5 py-2 font-semibold text-white shadow-pop hover:bg-cta-hover"
+        className="inline-flex size-11 items-center justify-center gap-1.5 rounded-full bg-cta font-semibold text-white shadow-pop hover:bg-cta-hover sm:size-auto sm:px-3.5 sm:py-2"
       >
-        <FlaskConical className="size-4" aria-hidden="true" /> DEMO · hướng dẫn
+        <FlaskConical className="size-5 sm:size-4" aria-hidden="true" />
+        {/* < sm: chỉ icon, tên đọc cho trình đọc màn hình; ≥ sm: hiện chữ */}
+        <span className="sr-only sm:hidden">Mở hướng dẫn demo</span>
+        <span className="hidden sm:inline">DEMO · hướng dẫn</span>
       </button>
     </div>
   );

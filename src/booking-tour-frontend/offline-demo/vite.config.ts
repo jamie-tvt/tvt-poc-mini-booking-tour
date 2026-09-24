@@ -26,6 +26,11 @@ function patchBrowserNavigation(): Plugin {
         out = `import { PLACEHOLDER_DATA_URL as __placeholder } from ${JSON.stringify(path.join(here, "mock/images.ts"))};\n` +
           out.replace('"/images/tours/placeholder.svg"', "__placeholder");
       }
+      if (id.endsWith(path.join("lib", "utils", "images.ts"))) {
+        // SVG dự phòng (/images/tours/*.svg) → data URL nhúng trong file HTML
+        out = `import { imageUrl as __imageUrl } from ${JSON.stringify(path.join(here, "mock/images.ts"))};\n` +
+          out.replace("export const localImage = (path: string): string => path;", "export const localImage = (path: string): string => __imageUrl(path) ?? path;");
+      }
       if (id.endsWith(path.join("lib", "api", "client.ts"))) {
         out = out.replace("const { pathname, search } = window.location;", "const { pathname, search } = window.__demoLocation();");
       }

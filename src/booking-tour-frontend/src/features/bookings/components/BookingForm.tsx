@@ -9,6 +9,7 @@ import { Button, LinkButton } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Spinner } from "@/components/ui/Spinner";
 import { ErrorState } from "@/components/shared/ErrorState";
+import { PhotoBackdrop } from "@/components/shared/PhotoBackdrop";
 import { TourImage } from "@/components/shared/TourImage";
 import { useApiQuery } from "@/lib/api/hooks";
 import { ApiError, errorMessage } from "@/lib/api/errors";
@@ -133,7 +134,9 @@ export function BookingForm({ tourId, departureId }: { tourId: string; departure
           </form>
         </Card>
 
-        <Card className="h-fit lg:sticky lg:top-24">
+        <Card className="relative isolate h-fit overflow-hidden lg:sticky lg:top-24">
+          {/* Nền mờ theo ảnh tour đang đặt */}
+          <PhotoBackdrop src={tour?.coverImageUrl} tone="card" />
           <h2 className="text-lg font-bold">Tóm tắt đơn</h2>
           <dl className="mt-4 grid grid-cols-[1fr_auto] gap-y-2 text-sm">
             <dt className="text-ink-soft">

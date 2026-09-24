@@ -8,6 +8,7 @@ import { HeroSearch } from "@/features/tours/components/HeroSearch";
 import { TourGrid } from "@/features/tours/components/TourCard";
 import { tourServer } from "@/features/tours/services/tourServer";
 import { errorMessage } from "@/lib/api/errors";
+import { HOME_HERO_IMAGE, unsplashSrcSet, unsplashVariant } from "@/lib/utils/images";
 
 export const dynamic = "force-dynamic";
 
@@ -20,20 +21,37 @@ export default async function HomePage() {
 
   return (
     <>
-      <section className="aurora relative overflow-hidden text-white">
-        <Container className="relative py-16 sm:py-20 lg:py-24">
-          <p className="text-sm font-semibold uppercase tracking-widest text-sky-100">Miền Tây sông nước · Biển đảo phương Nam</p>
-          <h1 className="mt-3 max-w-3xl text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
+      {/* Hero: ảnh thật full-bleed + gradient tối từ dưới lên để chữ trắng đạt tương phản; form tìm kiếm kính mờ đè mép dưới */}
+      <section className="relative isolate overflow-hidden bg-night text-white">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={unsplashVariant(HOME_HERO_IMAGE, 1600)}
+          srcSet={unsplashSrcSet(HOME_HERO_IMAGE, [800, 1200, 1600, 2400])}
+          sizes="100vw"
+          alt=""
+          width={1600}
+          height={900}
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
+          className="absolute inset-0 -z-10 size-full object-cover"
+        />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-night/30 via-night/45 to-night/85" aria-hidden="true" />
+        <Container className="flex min-h-[26rem] flex-col justify-end pb-32 pt-16 sm:min-h-[30rem] sm:pb-36 lg:min-h-[34rem] lg:pb-32">
+          <p className="text-sm font-semibold uppercase tracking-widest text-sky-100 [text-shadow:0_1px_8px_rgb(0_0_0/0.35)]">
+            Miền Tây sông nước · Biển đảo phương Nam
+          </p>
+          <h1 className="mt-3 max-w-3xl text-3xl font-bold text-white [text-shadow:0_2px_12px_rgb(0_0_0/0.35)] sm:text-4xl lg:text-5xl">
             Đi chợ nổi lúc bình minh, ngắm hoàng hôn trên đảo ngọc
           </h1>
-          <p className="mt-4 max-w-2xl text-base text-sky-50 sm:text-lg">
+          <p className="mt-4 max-w-2xl text-base text-sky-50 [text-shadow:0_1px_8px_rgb(0_0_0/0.35)] sm:text-lg">
             Chọn tour, chọn đợt khởi hành, giữ chỗ ngay và thanh toán trong vài phút.
           </p>
-          <div className="mt-8">
-            <HeroSearch categories={categories} />
-          </div>
         </Container>
       </section>
+      <Container className="relative z-10 -mt-24 sm:-mt-28 lg:-mt-20">
+        <HeroSearch categories={categories} />
+      </Container>
 
       <Container className="py-12">
         <div className="mb-6 flex flex-wrap items-end justify-between gap-3">

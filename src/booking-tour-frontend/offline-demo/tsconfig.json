@@ -13,5 +13,5 @@
     }
   },
   "include": ["./**/*.ts", "./**/*.tsx", "../src/**/*.ts", "../src/**/*.tsx"],
-  "exclude": ["dist", "../src/**/tests/**", "../src/app/layout.tsx"]
+  "exclude": ["dist", "./**/*.test.ts", "../src/**/tests/**", "../src/app/layout.tsx"]
 }

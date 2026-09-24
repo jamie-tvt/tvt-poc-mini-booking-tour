@@ -2,7 +2,7 @@
 id: technical.api-contracts
 status: approved
 owner: mentor-team
-last_updated: 2026-09-23
+last_updated: 2026-09-24
 dependencies: [technical.data-model, technical.state-machine]
 code_ref: [src/booking-tour-backend/src/main/java/com/tourbooking/presentation]
 tags: [technical, api, contract]
@@ -109,7 +109,7 @@ interface NotificationDto { id: number; title: string; content: string; bookingI
 ### 4.2 Tour, danh mục, địa điểm
 | Method | Path | Quyền | Ghi chú |
 |---|---|---|---|
-| GET | `/tours?keyword&categoryId&minPrice&maxPrice&departFrom&departTo&page&size&sort` | public | Chỉ `ACTIVE`. `sort`: `price,asc` \| `price,desc` \| `nextDeparture` \| `newest`. → `PageResponse<TourSummaryDto>` |
+| GET | `/tours?keyword&categoryId&minPrice&maxPrice&departFrom&departTo&page&size&sort` | public | Chỉ `ACTIVE`. `sort`: `price,asc` \| `price,desc` \| `nextDeparture` \| `newest`. `keyword` so khớp không dấu ("phu quoc" = "Phú Quốc", "dong thap" = "Đồng Tháp"). Có `departFrom`/`departTo` thì `nextDepartureAt` là đợt đầu tiên trong khoảng lọc. → `PageResponse<TourSummaryDto>` |
 | GET | `/tours/{id}` | public | `TourDetailDto`; tour không ACTIVE → 404 với public, staff xem được |
 | GET | `/manager/tours?keyword&status&page&size` | Staff | Mọi trạng thái (≠ intern: tách endpoint quản trị) |
 | POST | `/tours` | Staff | `{tourCode, title, description, destination, durationDays, maxGuests, price, categoryId, coverImageUrl?, status}` → `TourDetailDto` |

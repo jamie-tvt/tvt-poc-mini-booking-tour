@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { CalendarDays, Clock, MapPin, Users } from "lucide-react";
+import { PhotoBackdrop } from "@/components/shared/PhotoBackdrop";
 import { TourImage } from "@/components/shared/TourImage";
 import { Stars } from "@/components/ui/Stars";
 import { formatDate, formatDuration, formatVnd } from "@/lib/utils/format";
@@ -8,10 +9,12 @@ import type { TourSummaryDto } from "@/types/domain";
 export function TourCard({ tour, priority }: { tour: TourSummaryDto; priority?: boolean }) {
   const soldOut = tour.openDepartureCount === 0 || tour.availableSeats === 0;
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded-xl border border-line bg-card shadow-card transition-shadow duration-200 hover:shadow-pop focus-within:shadow-pop">
+    <article className="group relative isolate flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-card shadow-card transition-shadow duration-200 hover:shadow-pop focus-within:shadow-pop">
+      {/* Sắc màu mờ lấy từ chính ảnh tour, nằm dưới phần nội dung (ảnh sắc nét phía trên che phần đầu) */}
+      <PhotoBackdrop src={tour.coverImageUrl} tone="card" />
       <div className="relative">
-        <TourImage src={tour.coverImageUrl} alt="" priority={priority} />
-        <span className="absolute left-3 top-3 rounded-full bg-white/95 px-2.5 py-0.5 text-xs font-semibold text-ink shadow-sm">
+        <TourImage src={tour.coverImageUrl} alt="" priority={priority} width={800} />
+        <span className="pill-glass absolute left-3 top-3 px-2.5 py-0.5 text-xs shadow-sm">
           {tour.categoryName}
         </span>
       </div>
@@ -42,7 +45,7 @@ export function TourCard({ tour, priority }: { tour: TourSummaryDto; priority?: 
             {soldOut ? "Hết chỗ" : `Còn ${tour.availableSeats} chỗ`}
           </li>
         </ul>
-        <div className="mt-auto flex items-end justify-between gap-2 border-t border-line pt-3">
+        <div className="mt-auto flex items-end justify-between gap-2 border-t border-line/70 pt-3">
           <Stars value={tour.ratingAverage} count={tour.ratingCount} />
           <p className="text-right">
             <span className="block text-xs text-ink-soft">Giá từ</span>

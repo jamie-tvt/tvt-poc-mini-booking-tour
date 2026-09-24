@@ -4,7 +4,8 @@
  */
 import type { BookingStatus, DepartureStatus, PaymentStatus, ReviewStatus, Role, TourStatus } from "@/types/domain";
 
-export const DB_KEY = "bt.demo.db.v1";
+// v2 (24/09/2026): ảnh tour chuyển sang Unsplash → đổi khoá để trình duyệt đã mở bản cũ seed lại
+export const DB_KEY = "bt.demo.db.v2";
 const HOUR = 3_600_000;
 const DAY = 24 * HOUR;
 
@@ -115,14 +116,28 @@ export function seed(now = Date.now()): DB {
     ["Cánh đồng điện gió Bạc Liêu", "Điện gió ven biển"],
   ]) p[name] = insert<Place>(db, "places", { name, description });
 
+  // Ảnh tour: link CDN Unsplash (Unsplash License — ghi công tác giả), giống DemoDataSeeder.java.
+  // Mất mạng → TourImage tự đổi sang SVG minh hoạ cùng tên (public/images/tours).
+  const PHOTOS: Record<string, string> = {
+    "cai-rang": "photo-1689760661307-ea43aa8114e5", // Monika Guzikowska
+    "con-son": "photo-1624937195771-358add2e0d9d", // Trang Trinh
+    "lung-ngoc-hoang": "photo-1589562337460-9d825d2cd5a2", // Mike Swigunski
+    "mui-ca-mau": "photo-1589556183130-530470785fab", // Timothy K
+    "soc-trang": "photo-1650197404160-8d08f76002c0", // Mộc Đăng Khoa
+    "phu-quoc": "photo-1732243395944-cb3ff9311091", // Vivu Vietnam
+    "tra-su": "photo-1580630873708-e0475b1856c4", // diGital Sennin
+    "bac-lieu": "photo-1729568664729-1f2f44e53320", // Thompson Le
+  };
+  const photo = (slug: string) => `https://images.unsplash.com/${PHOTOS[slug]}?auto=format&fit=crop&w=1200&q=75`;
+
   const tour = (code: string, title: string, dest: string, price: number, days: number, maxGuests: number, c: Category, img: string,
     desc: string, ...itinerary: Place[]) => {
     const t = insert<Tour>(db, "tours", {
       tourCode: code, title, description: desc, destination: dest, price, durationDays: days, maxGuests,
-      coverImageUrl: `/images/tours/${img}.svg`, categoryId: c.id, status: "ACTIVE", createdAt: now - 30 * DAY, updatedAt: now - 30 * DAY,
+      coverImageUrl: photo(img), categoryId: c.id, status: "ACTIVE", createdAt: now - 30 * DAY, updatedAt: now - 30 * DAY,
     });
     itinerary.forEach((pl, i) => insert<Detail>(db, "details", { tourId: t.id, placeId: pl.id, displayOrder: i + 1 }));
-    insert<Image>(db, "images", { tourId: t.id, imageUrl: `/images/tours/${img}.svg`, sortOrder: 0 });
+    insert<Image>(db, "images", { tourId: t.id, imageUrl: photo(img), sortOrder: 0 });
     return t;
   };
   const caiRang = tour("MT-CR-01", "Chợ nổi Cái Răng – Vườn trái cây Phong Điền", "Cần Thơ", 650_000, 1, 25, songNuoc, "cai-rang",
