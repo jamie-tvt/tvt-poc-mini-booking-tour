@@ -170,7 +170,34 @@ public class DemoDataSeeder implements CommandLineRunner {
 
         notifications.save(new Notification(hao.getId(), haoPast.getId(), "Cảm ơn bạn đã đồng hành",
                 "Tour Chợ nổi Cái Răng đã kết thúc. Hãy để lại đánh giá cho chuyến đi nhé.", now.minus(12, ChronoUnit.DAYS)));
+
+        Map<String, TourCategory> cats = new HashMap<>();
+        for (TourCategory c : List.of(songNuoc, vanHoa, sinhThai, bienDao)) cats.put(c.getName(), c);
+        seedCatalog(MekongCatalog.load(), cats, p, now);
         log.info("Đã tạo dữ liệu mẫu: 6 tài khoản, {} tour, {} đợt khởi hành", tours.count(), departures.count());
+    }
+
+    /**
+     * 200 tour miền Tây từ catalog JSON (dùng chung với bản demo offline). Danh mục, địa điểm trùng tên thì dùng lại;
+     * đợt khởi hành tính theo "hôm nay" nên lúc nào cũng còn đợt sắp tới.
+     */
+    void seedCatalog(MekongCatalog catalog, Map<String, TourCategory> cats, Map<String, Place> placesByName, Instant now) {
+        for (String name : catalog.categories()) cats.computeIfAbsent(name, n -> categories.save(new TourCategory(n)));
+        for (MekongCatalog.PlaceRow row : catalog.places()) {
+            placesByName.computeIfAbsent(row.name(), n -> places.save(new Place(n, row.description())));
+        }
+        for (MekongCatalog.TourRow row : catalog.tours()) {
+            Tour t = new Tour(row.code(), now);
+            t.update(row.code(), row.title(), row.description(), row.destination(), row.price(), row.durationDays(), row.maxGuests(),
+                    row.images().get(0), Objects.requireNonNull(cats.get(row.category()), row.category()), now);
+            t.changeStatus(TourStatus.ACTIVE, now);
+            t = tours.save(t);
+            for (int i = 0; i < row.places().size(); i++) {
+                details.save(new TourDetail(t.getId(), Objects.requireNonNull(placesByName.get(row.places().get(i)), row.places().get(i)), i + 1));
+            }
+            for (int i = 0; i < row.images().size(); i++) images.save(new TourImage(t.getId(), row.images().get(i), i));
+            for (MekongCatalog.DepartureRow d : row.departures()) dep(t, vnMorning(now, d.daysAhead()), d.capacity(), null, now);
+        }
     }
 
     private User user(String role, String name, String email, String phone, String pw, Instant now) {

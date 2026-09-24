@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { readFileSync } from "node:fs";
 import path from "node:path";
 
 /**
@@ -7,6 +8,17 @@ import path from "node:path";
  */
 const FILE = "file://" + path.resolve(__dirname, "../../../review-html/BookingTour_Demo.html");
 const go = (page: Page, route: string) => page.goto(`${FILE}#${route}`);
+
+/**
+ * Seed = 8 tour demo gốc (7 đang bán) + 200 tour catalog miền Tây (src/seed-catalog). Số kỳ vọng tính từ catalog
+ * để sinh lại catalog không làm vỡ test.
+ */
+type CatalogTour = { code: string; title: string; destination: string; category: string; price: number; departures: { daysAhead: number }[] };
+const CATALOG: { tours: CatalogTour[] } = JSON.parse(
+  readFileSync(path.resolve(__dirname, "../../booking-tour-backend/src/main/resources/seed/mekong-catalog.json"), "utf8"));
+const fold = (s: string) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").replace(/Đ/g, "D").toLowerCase();
+const catalogMatching = (kw: string) => CATALOG.tours.filter((t) => [t.title, t.destination, t.code].some((x) => fold(x).includes(kw))).length;
+const PUBLIC_TOURS = 7 + CATALOG.tours.length;
 
 function watchErrors(page: Page) {
   const errors: string[] = [];
@@ -42,8 +54,10 @@ test("trang công khai: trang chủ, tìm kiếm, chi tiết tour", async ({ pag
   await expect(page.getByText("Tour sắp khởi hành")).toBeVisible();
   await page.getByRole("link", { name: /Xem tất cả tour/ }).click();
   await expect(page).toHaveURL(/#\/tours\?sort=nextDeparture/);
-  await expect(page.getByText(/Tìm thấy/)).toContainText("7");
-  await page.getByRole("link", { name: /Phú Quốc/ }).first().click();
+  await expect(page.getByText(/Tìm thấy/)).toContainText(String(PUBLIC_TOURS));
+  await page.getByLabel("Từ khoá").fill("cap treo");
+  await page.getByRole("button", { name: /Áp dụng bộ lọc/ }).click();
+  await page.getByRole("link", { name: /Phú Quốc – Nam đảo và cáp treo/ }).first().click();
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Phú Quốc");
   await expect(page.getByText("Lịch trình", { exact: true })).toBeVisible();
   await expect(page.getByText(/Lịch trình hợp lý, khách sạn sạch/)).toBeVisible(); // đánh giá có sẵn
@@ -200,24 +214,27 @@ test("F1: tìm không dấu \"phu quoc\" / \"can tho\" ra tour có dấu", async
   await page.getByLabel("Từ khoá").fill("phu quoc");
   await page.getByRole("button", { name: /Áp dụng bộ lọc/ }).click();
   await expect(page).toHaveURL(/keyword=phu\+quoc/);
-  await expect(page.getByText(/Tìm thấy/)).toContainText("1");
-  await expect(page.getByRole("link", { name: /Phú Quốc – Nam đảo/ })).toBeVisible();
+  await expect(page.getByText(/Tìm thấy/)).toContainText(String(1 + catalogMatching("phu quoc")));
+  await expect(page.getByRole("link", { name: /Phú Quốc/ }).first()).toBeVisible();
 
   await go(page, "/tours?keyword=can%20tho");
-  await expect(page.getByText(/Tìm thấy/)).toContainText("2"); // Cái Răng + Cồn Sơn (Cần Thơ)
+  // Cái Răng + Cồn Sơn (Cần Thơ) + tour catalog có "Cần Thơ" trong tên/điểm đến
+  await expect(page.getByText(/Tìm thấy/)).toContainText(String(2 + catalogMatching("can tho")));
   await go(page, "/tours?keyword=CHO%20NOI");
   await expect(page.getByRole("link", { name: /Chợ nổi Cái Răng/ })).toBeVisible();
   expect(errors).toEqual([]);
 });
 
 test("F2: lọc theo khoảng ngày → thẻ tour hiện ngày khởi hành nằm trong khoảng", async ({ page }) => {
-  // Seed: mỗi tour có đợt ở +10, +24, +38 ngày → lọc +20..+30 thì thẻ phải hiện đợt +24
+  // Seed: 7 tour gốc có đợt +10, +24, +38; tour catalog có đợt riêng (daysAhead) → thẻ phải hiện đợt sớm nhất TRONG khoảng
   const ymd = (d: number) => new Date(Date.now() + d * 86_400_000).toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
   const vn = (d: number) => ymd(d).split("-").reverse().join("/");
   await go(page, `/tours?departFrom=${ymd(20)}&departTo=${ymd(30)}`);
-  await expect(page.getByText(/Tìm thấy/)).toContainText("7");
+  const inRange = CATALOG.tours.flatMap((t) => t.departures.map((d) => d.daysAhead)).filter((d) => d >= 20 && d <= 30);
+  const matching = CATALOG.tours.filter((t) => t.departures.some((d) => d.daysAhead >= 20 && d.daysAhead <= 30)).length;
+  await expect(page.getByText(/Tìm thấy/)).toContainText(String(7 + matching));
   const cards = page.getByRole("article");
-  await expect(cards.first()).toContainText(`Khởi hành ${vn(24)}`);
+  await expect(cards.first()).toContainText(`Khởi hành ${vn(Math.min(24, ...inRange))}`);
   await expect(page.getByText(`Khởi hành ${vn(10)}`)).toHaveCount(0);
 });
 
@@ -250,10 +267,12 @@ test("mobile: bộ lọc gọn — bottom sheet, chip bỏ lọc, nút DEMO khô
   await expect(sheet.getByRole("alert")).toContainText("Giá tối thiểu");
   await sheet.getByLabel("Giá từ (₫)").fill("");
   await sheet.getByLabel("Giá đến (₫)").fill("2000000");
-  await expect(sheet.getByRole("button", { name: "Xem 2 tour" })).toBeVisible();
-  await sheet.getByRole("button", { name: "Xem 2 tour" }).click();
+  // Cái Răng + Cồn Sơn + tour catalog "Sông nước miền Tây" giá ≤ 2 triệu
+  const n = 2 + CATALOG.tours.filter((t) => t.category === "Sông nước miền Tây" && t.price <= 2_000_000).length;
+  await expect(sheet.getByRole("button", { name: `Xem ${n} tour` })).toBeVisible();
+  await sheet.getByRole("button", { name: `Xem ${n} tour` }).click();
   await expect(sheet).toBeHidden();
-  await expect(page.getByText(/Tìm thấy/)).toContainText("2");
+  await expect(page.getByText(/Tìm thấy/)).toContainText(String(n));
   await expect(page.getByRole("button", { name: "Bộ lọc (2)" })).toBeVisible();
 
   await page.getByRole("button", { name: /Bỏ lọc Sông nước/ }).click();

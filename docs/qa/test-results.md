@@ -9,6 +9,17 @@ tags: [qa, test-results]
 
 # Kết quả test — 23/09/2026
 
+## v1.2.0 — 24/09/2026 (catalog 200 tour miền Tây)
+
+| Bộ test | Số test | Kết quả |
+|---|---|---|
+| Backend `./mvnw verify` (unit + IT Testcontainers, thêm `MekongCatalogTest` 4) | 46 | Pass |
+| Frontend Vitest (thêm `offline-demo/mock/catalog.test.ts` 4) | 64 | Pass; `tsc --noEmit` sạch |
+| E2E demo offline (4 test cập nhật số kỳ vọng tính từ catalog) | 10 | Pass |
+| Seeder trên MySQL 8 trống (CAT-05) | — | 208 tour, 625 đợt; `GET /tours?keyword=ben tre` → 22 tour; chi tiết có 4 ảnh + lịch trình |
+| Link ảnh Unsplash dùng trong catalog | 278 | HTTP 200 |
+| Soát giao diện (danh sách lọc "ben tre", chi tiết) desktop + mobile | — | Ảnh tải được, không vỡ layout |
+
 ## v1.1.0 — 24/09/2026 (F1, F2, F4, F6)
 
 | Bộ test | Số test | Kết quả |

@@ -9,6 +9,7 @@ tags: [changelog]
 
 # Nhật ký thay đổi
 
+- 2026-09-24 — **v1.2.0** — thêm 200 tour miền Tây (13 tỉnh, 120 địa điểm có thật, 600 đợt khởi hành) với mô tả thực tế và 3–5 ảnh Unsplash/tour đã duyệt tay theo chủ đề (chợ nổi, rạch dừa, chùa Khmer, rừng tràm, biển đảo…). Dữ liệu sinh bởi `src/seed-catalog/generate.mjs` → `seed/mekong-catalog.json`; `DemoDataSeeder.seedCatalog()` và API giả lập offline cùng đọc file này. Thêm 2 danh mục "Ẩm thực – Làng nghề", "Miệt vườn – Nông trại". Bản demo đổi khoá lưu trữ sang `bt.demo.db.v3`; DB MySQL local cần `docker compose down -v` để seed lại. E2E offline tính số kỳ vọng từ catalog.
 - 2026-09-24 — **v1.1.0** (phản hồi mentor, `BUG_REPORT.md`):
   - F1 — tìm tour gõ không dấu ("phu quoc", "can tho", "dong thap") ra kết quả như có dấu: backend đổi `đ → d` khi so khớp (`TourService`), API giả lập dùng `fold()` cho mọi ô tìm kiếm; thêm `TourSearchIT`.
   - F2 — lọc theo khoảng ngày thì thẻ tour hiện đợt khởi hành nằm trong khoảng (backend + API giả lập).

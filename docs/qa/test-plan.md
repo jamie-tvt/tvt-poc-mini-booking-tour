@@ -2,7 +2,7 @@
 id: qa.test-plan
 status: approved
 owner: mentor-team
-last_updated: 2026-09-23
+last_updated: 2026-09-24
 dependencies: [technical.api-contracts, technical.state-machine]
 tags: [qa, test-plan, gate-2]
 ---
@@ -42,3 +42,15 @@ tags: [qa, test-plan, gate-2]
 - [x] Focus nhìn thấy khi dùng bàn phím; mọi input có `<label>`
 - [x] `prefers-reduced-motion`
 - [x] Responsive 375 / 768 / 1024 / 1440, không tràn ngang (E2E chạy cả iPhone 14 Pro)
+
+## v1.2.0 — Catalog 200 tour miền Tây (GATE 2 đã duyệt 24/09/2026)
+| Mã | Kịch bản | Tầng | Kỳ vọng |
+|---|---|---|---|
+| CAT-01 | `MekongCatalogTest`: 200 tour, mã/tên không trùng, mã không đụng 8 tour gốc | Unit BE | Pass |
+| CAT-02 | Giá trị vừa cột DB (mã ≤ 20, tên ≤ 160, điểm đến ≤ 120, URL ảnh ≤ 255), địa điểm tham chiếu tồn tại, 3 đợt khởi hành ≥ 3 ngày tới | Unit BE | Pass |
+| CAT-03 | Mọi ảnh là link CDN Unsplash, có ghi công tác giả; phủ 13 tỉnh | Unit BE | Pass |
+| CAT-04 | `offline-demo/mock/catalog.test.ts`: seed demo có 208 tour, danh mục/địa điểm trùng tên dùng lại, đợt OPEN trong tương lai | Unit FE | Pass |
+| CAT-05 | Chạy stack Docker với DB trống → `DemoDataSeeder` tạo đủ 208 tour, 6 danh mục; `GET /tours?keyword=ben tre` có kết quả, phân trang 12/trang | Thủ công + API | Seeder không lỗi, số liệu khớp |
+| CAT-06 | Toàn bộ test cũ (unit/IT Testcontainers/E2E offline) chạy lại | Hồi quy | Pass; E2E phụ thuộc thứ tự danh sách thì cập nhật cho khớp dữ liệu mới |
+| CAT-07 | Bản offline: trang chủ, danh sách (lọc Bến Tre, An Giang), chi tiết tour mới — ảnh tải được, desktop + mobile | UI (Playwright + screenshot) | Không vỡ layout, không ảnh lỗi |
+| CAT-08 | Tag `v1.2.0` → GitHub Actions xanh → Vercel production có dữ liệu mới | CI/CD | Deploy thành công |

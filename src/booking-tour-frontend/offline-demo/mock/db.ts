@@ -1,11 +1,13 @@
 /**
  * "Cơ sở dữ liệu" của API giả lập: 1 object JSON lưu ở localStorage.
  * Seed bám DemoDataSeeder.java của backend (cùng tài khoản, tour, đợt, đơn mẫu, sinh theo "hôm nay").
+ * 200 tour miền Tây đọc CHÍNH file catalog của backend (sinh bởi src/seed-catalog/generate.mjs).
  */
 import type { BookingStatus, DepartureStatus, PaymentStatus, ReviewStatus, Role, TourStatus } from "@/types/domain";
+import catalog from "../../../booking-tour-backend/src/main/resources/seed/mekong-catalog.json";
 
-// v2 (24/09/2026): ảnh tour chuyển sang Unsplash → đổi khoá để trình duyệt đã mở bản cũ seed lại
-export const DB_KEY = "bt.demo.db.v2";
+// v3 (24/09/2026): thêm 200 tour miền Tây → đổi khoá để trình duyệt đã mở bản cũ seed lại
+export const DB_KEY = "bt.demo.db.v3";
 const HOUR = 3_600_000;
 const DAY = 24 * HOUR;
 
@@ -222,6 +224,21 @@ export function seed(now = Date.now()): DB {
     userId: hao.id, bookingId: haoPast.id, title: "Cảm ơn bạn đã đồng hành", read: false, createdAt: now - 12 * DAY,
     content: "Tour Chợ nổi Cái Răng đã kết thúc. Hãy để lại đánh giá cho chuyến đi nhé.",
   });
+
+  // 200 tour miền Tây — giống DemoDataSeeder.seedCatalog(): danh mục, địa điểm trùng tên thì dùng lại
+  const catByName = new Map(db.categories.map((c) => [c.name, c]));
+  for (const name of catalog.categories) if (!catByName.has(name)) catByName.set(name, cat(name));
+  for (const row of catalog.places) p[row.name] ??= insert<Place>(db, "places", { name: row.name, description: row.description });
+  for (const row of catalog.tours) {
+    const t = insert<Tour>(db, "tours", {
+      tourCode: row.code, title: row.title, description: row.description, destination: row.destination, price: row.price,
+      durationDays: row.durationDays, maxGuests: row.maxGuests, coverImageUrl: row.images[0], categoryId: catByName.get(row.category)!.id,
+      status: "ACTIVE", createdAt: now - 30 * DAY, updatedAt: now - 30 * DAY,
+    });
+    row.places.forEach((name, i) => insert<Detail>(db, "details", { tourId: t.id, placeId: p[name]!.id, displayOrder: i + 1 }));
+    row.images.forEach((imageUrl, i) => insert<Image>(db, "images", { tourId: t.id, imageUrl, sortOrder: i }));
+    for (const d of row.departures) dep(t, vnMorning(now, d.daysAhead), d.capacity);
+  }
   return db;
 }
 

@@ -5,6 +5,7 @@ Bản mẫu để trình bày "doanh nghiệp làm dự án thật thế nào" v
 - Kế hoạch & phạm vi: `proposal/` (scope.json, plan .html, tasklist .xlsx) · Artifact: https://claude.ai/artifact/9eQizGQH9poYjdVsqTbYLM
 - Tài liệu: `docs/README.md` (manifest) · hợp đồng API `docs/technical/api-contracts.md`
 - Mã nguồn: `src/booking-tour-backend` (Spring Boot), `src/booking-tour-frontend` (Next.js), `src/docker`, `src/e2e`
+- Dữ liệu mẫu: 8 tour demo gốc + **200 tour miền Tây** (13 tỉnh, ảnh Unsplash) sinh bởi `src/seed-catalog/generate.mjs` → `src/booking-tour-backend/src/main/resources/seed/mekong-catalog.json` (backend và bản demo offline cùng đọc)
 - **Demo nhanh không cần cài gì**: mở `review-html/BookingTour_Demo.html` (1 file, chạy offline)
 - Chạy demo full-stack: `docs/ops/demo-runbook.md` · Kết quả test: `docs/qa/test-results.md` · Ảnh: `review-html/screenshots/`
 - **CI/CD**: `.github/workflows/ci-cd-vercel.yml` — push `main`/PR chỉ chạy test FE + BE; **phát hành** bằng tag trên `main` (`git tag v1.2.0 && git push origin v1.2.0`) → test → deploy bản demo lên Vercel (https://tvt-poc-mini-booking-tour.vercel.app) → tự tạo GitHub Release. Vercel chỉ host bản demo static (API giả lập trong trình duyệt), không host Spring Boot/MySQL.
