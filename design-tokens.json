@@ -1,0 +1,28 @@
+{
+  "colors": {
+    "primary": "#0EA5E9",
+    "onPrimary": "#0F172A",
+    "accent": "#EA580C",
+    "onAccent": "#000000",
+    "bg": "#F0F9FF",
+    "ink": "#0C4A6E",
+    "card": "#FFFFFF",
+    "inkSoft": "#475569",
+    "line": "#BAE6FD",
+    "bad": "#DC2626",
+    "primarySoft": "#E2F4FC",
+    "primaryInk": "#0B87BF",
+    "accentSoft": "#FCEBE2",
+    "accentInk": "#C0480A",
+    "badSoft": "#FBE5E5"
+  },
+  "fonts": {
+    "heading": "Be Vietnam Pro",
+    "body": "Noto Sans",
+    "googleFontsUrl": "https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Noto+Sans:wght@300;400;500;600;700&display=swap"
+  },
+  "_source": {
+    "master": "design-system/booking-tour/MASTER.md",
+    "brandOverride": false
+  }
+}

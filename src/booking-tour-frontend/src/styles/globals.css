@@ -1,0 +1,124 @@
+@import "tailwindcss";
+
+/*
+ * Token từ design-system/booking-tour/MASTER.md + design-tokens.json.
+ * Điều chỉnh tương phản (≥ 4.5:1 với chữ trắng):
+ *   nút chính  #0369A1 (hover #075985)   — thay #0EA5E9 (chỉ 2.8:1)
+ *   nút CTA    #C2410C (hover #9A3412)   — thay #EA580C
+ */
+@theme inline {
+  --color-bg: #f0f9ff;
+  --color-ink: #0c4a6e;
+  --color-ink-soft: #475569;
+  --color-line: #bae6fd;
+  --color-line-strong: #7dd3fc;
+  --color-card: #ffffff;
+  --color-muted: #e8f2f8;
+  --color-sky: #0ea5e9;
+  --color-sky-soft: #e2f4fc;
+  --color-brand: #0369a1;
+  --color-brand-hover: #075985;
+  --color-cta: #c2410c;
+  --color-cta-hover: #9a3412;
+  --color-cta-soft: #fcebe2;
+  --color-danger: #b91c1c;
+  --color-danger-hover: #991b1b;
+  --color-danger-soft: #fbe5e5;
+
+  --font-heading: var(--font-be-vietnam-pro), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-noto-sans), ui-sans-serif, system-ui, sans-serif;
+
+  --shadow-card: 0 4px 6px rgba(12, 74, 110, 0.08);
+  --shadow-pop: 0 10px 15px rgba(12, 74, 110, 0.12);
+  --shadow-modal: 0 20px 25px rgba(0, 0, 0, 0.15);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-heading);
+    line-height: 1.25;
+    font-weight: 700;
+  }
+  a,
+  button,
+  summary,
+  select,
+  label[for],
+  [role="button"],
+  [role="tab"],
+  input[type="checkbox"],
+  input[type="radio"] {
+    cursor: pointer;
+  }
+  button:disabled,
+  [aria-disabled="true"],
+  select:disabled,
+  input:disabled {
+    cursor: not-allowed;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-ink);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+  img {
+    max-width: 100%;
+  }
+}
+
+@layer components {
+  .aurora {
+    background:
+      radial-gradient(60% 80% at 10% 20%, rgba(14, 165, 233, 0.35), transparent 60%),
+      radial-gradient(50% 70% at 90% 10%, rgba(56, 189, 248, 0.3), transparent 60%),
+      radial-gradient(60% 80% at 70% 100%, rgba(234, 88, 12, 0.3), transparent 60%),
+      linear-gradient(135deg, #075985 0%, #0369a1 45%, #0c4a6e 100%);
+    background-size: 160% 160%;
+    animation: aurora-shift 12s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes aurora-shift {
+  from {
+    background-position: 0% 0%;
+  }
+  to {
+    background-position: 100% 100%;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

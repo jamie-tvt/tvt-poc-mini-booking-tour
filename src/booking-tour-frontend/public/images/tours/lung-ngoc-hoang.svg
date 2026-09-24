@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" role="img">
+<title>Khu bảo tồn thiên nhiên Lung Ngọc Hoàng</title>
+<defs>
+<linearGradient id="lgS" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#BAE6FD"/><stop offset="1" stop-color="#F0F9FF"/></linearGradient>
+<linearGradient id="lgW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7DD3FC"/><stop offset="1" stop-color="#0E7490"/></linearGradient>
+<g id="lgT"><path d="M-2 0h4v-60h-4z" fill="#E7E5E4"/><ellipse cy="-74" rx="13" ry="28" fill="#15803D"/></g>
+<path id="lgB" d="M0 0q-18-14-40-8q20 2 40 12q20-10 40-12q-22-6-40 8z" fill="#FFF" stroke="#94A3B8"/>
+</defs>
+<rect width="800" height="500" fill="url(#lgS)"/>
+<circle cx="640" cy="90" r="30" fill="#FEF9C3"/>
+<path d="M0 262v-40q25-24 50-6q30-30 60-4q25-20 50 0q30-28 60-2q25-22 50 0q30-26 60-4q25-18 50 2q30-30 60-4q25-20 50 0q30-28 60-2q25-24 50 0q30-22 60-2q25-18 50 2q30-26 50-2v62z" fill="#166534"/>
+<use href="#lgT" transform="translate(30 264) scale(.9)"/>
+<use href="#lgT" transform="translate(70 262)"/>
+<use href="#lgT" transform="translate(110 264) scale(.8)"/>
+<use href="#lgT" transform="translate(150 262) scale(1.1)"/>
+<use href="#lgT" transform="translate(195 264) scale(.85)"/>
+<use href="#lgT" transform="translate(240 262)"/>
+<use href="#lgT" transform="translate(290 264) scale(.8)"/>
+<use href="#lgT" transform="translate(470 264) scale(.8)"/>
+<use href="#lgT" transform="translate(510 262) scale(1.05)"/>
+<use href="#lgT" transform="translate(555 264) scale(.85)"/>
+<use href="#lgT" transform="translate(600 262)"/>
+<use href="#lgT" transform="translate(648 264) scale(.9)"/>
+<use href="#lgT" transform="translate(700 262) scale(1.1)"/>
+<use href="#lgT" transform="translate(750 264) scale(.85)"/>
+<use href="#lgT" transform="translate(790 262)"/>
+<rect y="262" width="800" height="238" fill="url(#lgW)"/>
+<path d="M0 300q100-16 220-2q120 12 240 2q110-10 200 0q80 6 140-2v16H0z" fill="#84CC16"/>
+<path d="M300 372q80-18 170-4q60 8 120 2q-60 16-150 14Q360 384 300 372z" fill="#65A30D"/>
+<g fill="#4D7C0F"><ellipse cx="160" cy="400" rx="18" ry="5"/><ellipse cx="200" cy="420" rx="14" ry="4"/><ellipse cx="640" cy="410" rx="18" ry="5"/><ellipse cx="600" cy="440" rx="16" ry="4"/><ellipse cx="380" cy="450" rx="20" ry="5"/></g>
+<g fill="#F472B6"><circle cx="164" cy="396" r="4"/><circle cx="636" cy="406" r="4"/><circle cx="384" cy="446" r="4"/></g>
+<path d="M120 340h60M250 330h40M560 336h70M420 420h60M240 470h80M520 480h60" stroke="#FFF" stroke-opacity=".35" stroke-width="3" stroke-linecap="round"/>
+<ellipse cx="560" cy="340" rx="16" ry="9" fill="#FFF"/>
+<path d="M572 336q8-8 4-22" stroke="#FFF" stroke-width="4" fill="none"/>
+<circle cx="576" cy="312" r="5" fill="#FFF"/>
+<path d="M580 310l12 4-12 2z" fill="#F59E0B"/>
+<path d="M556 348v18M564 348v18" stroke="#F59E0B" stroke-width="2"/>
+<path d="M544 338q-8 2-10 6q10 0 18-2z" fill="#1F2937"/>
+<use href="#lgB" transform="translate(300 120)"/>
+<use href="#lgB" transform="translate(360 152) scale(.8)"/>
+<use href="#lgB" transform="translate(420 112) scale(.7)"/>
+<use href="#lgB" transform="translate(520 146) scale(.6)"/>
+<path d="M0 500q30-60 20-120q-4 60-10 120zM80 500q-10-50 20-100q-16 50-10 100zM800 500q-30-60-20-130q4 70 10 130zM720 500q10-50-18-96q14 50 8 96z" fill="#65A30D"/>
+<path d="M20 500q4-70-8-150M36 500q-2-80 10-170M52 500q6-60-4-130M70 500q0-90-16-160M740 500q4-70-10-150M756 500q-2-90 12-180M772 500q4-60-6-120M788 500q-4-80 6-160" fill="none" stroke="#4D7C0F" stroke-width="4" stroke-linecap="round"/>
+<g fill="#92400E"><ellipse cx="13" cy="364" rx="4" ry="12"/><ellipse cx="45" cy="344" rx="4" ry="12"/><ellipse cx="55" cy="354" rx="4" ry="12"/><ellipse cx="731" cy="364" rx="4" ry="12"/><ellipse cx="767" cy="334" rx="4" ry="12"/><ellipse cx="793" cy="354" rx="4" ry="12"/></g>
+</svg>

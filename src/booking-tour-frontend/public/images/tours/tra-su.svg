@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" role="img">
+<title>Rừng tràm Trà Sư</title>
+<defs>
+<linearGradient id="tsS" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#BAE6FD"/><stop offset="1" stop-color="#ECFCCB"/></linearGradient>
+<linearGradient id="tsW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#65A30D"/><stop offset="1" stop-color="#A3E635"/></linearGradient>
+<linearGradient id="tsC" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#134E4A"/><stop offset="1" stop-color="#2F6B4F"/></linearGradient>
+</defs>
+<rect width="800" height="500" fill="url(#tsS)"/>
+<path d="M0 320V120q40-30 80-6q40-40 90-8q40-34 90-4q40-36 90-6q40-30 80 0q40-40 90-6q40-30 90-4q40-34 90-6q30-24 60 0v200z" fill="#166534"/>
+<path d="M0 320V180q40-26 80-4q40-30 80-4q40-28 80 0q40-30 80-2q40-26 80 0q40-30 80-2q40-28 80 0q40-30 80 0q40-26 80 0q40-28 80 0v140z" fill="#15803D"/>
+<path d="M300 0h40L260 320h-20zM460 0h30L420 320h-16z" fill="#FFF" opacity=".12"/>
+<path d="M30 330V110h6v220zM80 330V140h5v190zM118 330V90h7v240zM170 330V150h5v180zM212 330V100h6v230zM262 330V160h5v170zM300 330V120h6v210zM350 330V170h4v160zM396 330V180h4v150zM440 330V150h5v180zM488 330V110h6v220zM540 330V160h5v170zM582 330V96h7v234zM632 330V150h5v180zM676 330V104h6v226zM724 330V140h5v190zM768 330V92h7v238z" fill="#E7E5E4"/>
+<path d="M118 200h7M212 180h6M488 210h6M582 170h7M676 220h6M768 190h7M30 240h6" stroke="#A8A29E" stroke-width="3"/>
+<g fill="#15803D"><ellipse cx="60" cy="150" rx="40" ry="20"/><ellipse cx="240" cy="130" rx="44" ry="18"/><ellipse cx="420" cy="170" rx="36" ry="16"/><ellipse cx="610" cy="130" rx="44" ry="18"/><ellipse cx="740" cy="170" rx="36" ry="16"/></g>
+<path d="M0 0h800v50q-40 30-80 6q-40 34-90 6q-40 30-90 2q-40 36-90 4q-40 26-80 0q-40 34-90 4q-40 30-90 0q-40 34-90 4q-40 26-100 0z" fill="#14532D"/>
+<rect y="316" width="800" height="184" fill="url(#tsW)"/>
+<path d="M290 500C340 430 520 400 466 318h30C560 390 470 440 580 500z" fill="url(#tsC)"/>
+<path d="M470 340h20M450 380h40M430 430h50M390 470h60" stroke="#FFF" stroke-opacity=".3" stroke-width="3" stroke-linecap="round"/>
+<g fill="#D9F99D"><circle cx="80" cy="360" r="4"/><circle cx="150" cy="400" r="5"/><circle cx="220" cy="350" r="3"/><circle cx="120" cy="460" r="5"/><circle cx="640" cy="360" r="4"/><circle cx="700" cy="420" r="5"/><circle cx="740" cy="470" r="4"/><circle cx="600" cy="460" r="3"/><circle cx="260" cy="440" r="4"/><circle cx="660" cy="340" r="3"/></g>
+<path d="M380 440q60 14 130 0l-12 12q-52 10-106 0z" fill="#92400E"/>
+<path d="M388 442q56 10 116 0" fill="none" stroke="#78350F" stroke-width="3"/>
+<path d="M420 446l60-30" stroke="#57310F" stroke-width="3" stroke-linecap="round"/>
+<path d="M200 70q-10-8-22-4q10 1 22 6q11-5 22-6q-12-4-22 4zM250 90q-8-6-17-3q8 1 17 5q9-4 17-5q-9-3-17 3z" fill="#FFF"/>
+</svg>

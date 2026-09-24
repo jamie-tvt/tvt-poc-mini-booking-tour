@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" role="img">
+<title>Đảo Phú Quốc</title>
+<defs>
+<linearGradient id="pqS" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#38BDF8"/><stop offset=".5" stop-color="#FDBA74"/><stop offset=".85" stop-color="#FB923C"/><stop offset="1" stop-color="#EA580C"/></linearGradient>
+<linearGradient id="pqW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2DD4BF"/><stop offset=".5" stop-color="#0EA5E9"/><stop offset="1" stop-color="#0369A1"/></linearGradient>
+<radialGradient id="pqG"><stop offset="0" stop-color="#FFF7ED"/><stop offset=".5" stop-color="#FED7AA" stop-opacity=".6"/><stop offset="1" stop-color="#FED7AA" stop-opacity="0"/></radialGradient>
+<g id="pqP"><path d="M0 0q10-60-6-120" fill="none" stroke="#7C2D12" stroke-width="8" stroke-linecap="round"/><path d="M-6-120q-34-18-64 14q30-14 64-14zm0 0q34-18 64 14q-30-14-64-14zm0 0q-24-30-56-28q32 10 56 28zm0 0q24-30 56-28q-32 10-56 28zm0 0q-6-30 8-48q-4 24-8 48z" fill="#166534"/><circle cx="-10" cy="-114" r="5" fill="#A16207"/><circle cx="0" cy="-113" r="5" fill="#A16207"/></g>
+</defs>
+<rect width="800" height="300" fill="url(#pqS)"/>
+<circle cx="400" cy="290" r="170" fill="url(#pqG)"/>
+<circle cx="400" cy="300" r="56" fill="#FFEDD5"/>
+<g fill="#FED7AA" opacity=".8"><ellipse cx="180" cy="120" rx="70" ry="10"/><ellipse cx="230" cy="136" rx="50" ry="8"/><ellipse cx="610" cy="90" rx="80" ry="10"/><ellipse cx="570" cy="106" rx="50" ry="7"/></g>
+<path d="M560 300q40-30 90-24t110 24z" fill="#9A3412" opacity=".55"/>
+<rect y="300" width="800" height="200" fill="url(#pqW)"/>
+<path d="M350 310h100M366 322h68M380 334h40M390 346h20" stroke="#FDBA74" stroke-width="4" stroke-linecap="round"/>
+<path d="M60 330h70M200 350h60M560 340h80M660 380h70M480 380h50" stroke="#FFF" stroke-opacity=".45" stroke-width="3" stroke-linecap="round"/>
+<path d="M250 330h40l-6 6h-28z" fill="#1E293B"/><path d="M268 330v-24l14 20z" fill="#FFF7ED"/>
+<path d="M0 386Q220 374 420 434T800 464" fill="none" stroke="#FFF" stroke-width="6" opacity=".9"/>
+<path d="M0 392Q220 380 420 440T800 470V500H0z" fill="#FDE68A"/>
+<path d="M0 404Q220 394 420 452T800 482V500H0z" fill="#FEF3C7"/>
+<use href="#pqP" transform="translate(80 470) rotate(-8) scale(2)"/>
+<use href="#pqP" transform="translate(180 452) rotate(12) scale(1.4)"/>
+<use href="#pqP" transform="translate(730 496) rotate(10) scale(-2 2)"/>
+<path d="M300 160q9-9 18 0q9-9 18 0M340 180q7-7 14 0q7-7 14 0" fill="none" stroke="#7C2D12" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

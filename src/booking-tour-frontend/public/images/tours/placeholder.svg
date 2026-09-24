@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" role="img">
+<title>Hình minh họa phong cảnh</title>
+<defs>
+<linearGradient id="phS" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#BAE6FD"/><stop offset="1" stop-color="#F0F9FF"/></linearGradient>
+<linearGradient id="phW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#BAE6FD"/><stop offset="1" stop-color="#38BDF8"/></linearGradient>
+<radialGradient id="phG"><stop offset="0" stop-color="#FEF3C7"/><stop offset="1" stop-color="#FEF3C7" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="800" height="500" fill="url(#phS)"/>
+<circle cx="560" cy="150" r="110" fill="url(#phG)"/>
+<circle cx="560" cy="150" r="44" fill="#FEF3C7"/>
+<path d="M150 120a26 26 0 0 1 50-10a20 20 0 0 1 36 12h-86zM640 80a20 20 0 0 1 40-6a16 16 0 0 1 28 10h-68z" fill="#FFF"/>
+<path d="M0 320Q120 190 260 270T520 240T800 280V340H0z" fill="#E0F2FE"/>
+<path d="M0 330Q160 230 330 300T620 270T800 300V340H0z" fill="#7DD3FC"/>
+<path d="M0 340Q200 280 400 320T800 320V340H0z" fill="#38BDF8"/>
+<rect y="340" width="800" height="160" fill="url(#phW)"/>
+<path d="M520 360h80M536 374h48M548 388h24" stroke="#FEF3C7" stroke-width="4" stroke-linecap="round"/>
+<path d="M60 380h90M240 410h70M400 450h90M640 430h80M120 470h60" stroke="#FFF" stroke-opacity=".5" stroke-width="3" stroke-linecap="round"/>
+<path d="M0 470Q140 420 300 500H0z" fill="#0EA5E9" opacity=".5"/>
+</svg>

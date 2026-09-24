@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" role="img">
+<title>Cánh đồng điện gió Bạc Liêu</title>
+<defs>
+<linearGradient id="blS" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#38BDF8"/><stop offset="1" stop-color="#E0F2FE"/></linearGradient>
+<linearGradient id="blW" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7DD3FC"/><stop offset="1" stop-color="#0369A1"/></linearGradient>
+<path id="blB" d="M-2 0q3-44 1-92q5 44 5 90z" fill="#FFF" stroke="#94A3B8"/>
+<g id="blR"><use href="#blB"/><use href="#blB" transform="rotate(120)"/><use href="#blB" transform="rotate(240)"/><circle r="5" fill="#E2E8F0" stroke="#94A3B8"/></g>
+<g id="blT"><path d="M-4 0h8l-3-160h-2z" fill="#F8FAFC" stroke="#94A3B8"/><rect x="-5" y="-167" width="14" height="9" rx="3" fill="#E2E8F0"/><use href="#blR" transform="translate(0 -162) rotate(20)"/></g>
+<g id="blU"><path d="M-4 0h8l-3-160h-2z" fill="#F8FAFC" stroke="#94A3B8"/><rect x="-5" y="-167" width="14" height="9" rx="3" fill="#E2E8F0"/><use href="#blR" transform="translate(0 -162) rotate(75)"/></g>
+</defs>
+<rect width="800" height="500" fill="url(#blS)"/>
+<circle cx="140" cy="90" r="34" fill="#FEF3C7"/>
+<path d="M300 90a24 24 0 0 1 46-8a18 18 0 0 1 32 10h-78zM560 130a20 20 0 0 1 40-6a16 16 0 0 1 28 10h-68z" fill="#FFF"/>
+<rect y="262" width="800" height="238" fill="url(#blW)"/>
+<path d="M0 262H420Q560 310 800 460V500H0z" fill="#84CC16"/>
+<path d="M420 262Q560 310 800 460" fill="none" stroke="#FDE68A" stroke-width="8"/>
+<path d="M0 264v-8q20-12 40 0q20-10 40 0q20-14 40 0q20-8 40 0q20-12 40 0q20-10 40 0q20-14 40 0q20-8 40 0q20-12 40 0q20-10 40 0v8z" fill="#166534"/>
+<path d="M0 280h460v10H0zM0 310h520v12H0zM0 350h580v16H0zM0 400h660v22H0zM0 460h720v30H0z" fill="#65A30D"/>
+<path d="M40 328h120v14H40zM240 328h140v14H240zM220 374h160v18H220zM460 374h120v18H460zM60 428h200v24H60z" fill="#BAE6FD"/>
+<path d="M600 300h50M700 330h60M520 380h40M660 440h40" stroke="#FFF" stroke-opacity=".45" stroke-width="3" stroke-linecap="round"/>
+<use href="#blU" transform="translate(120 262) scale(.28)"/>
+<use href="#blT" transform="translate(220 262) scale(.3)"/>
+<use href="#blT" transform="translate(600 274) scale(.3)"/>
+<use href="#blU" transform="translate(680 290) scale(.38)"/>
+<use href="#blT" transform="translate(484 278) scale(.38)"/>
+<use href="#blU" transform="translate(546 302) scale(.5)"/>
+<use href="#blT" transform="translate(632 342) scale(.7)"/>
+<use href="#blU" transform="translate(742 402) scale(1)"/>
+</svg>

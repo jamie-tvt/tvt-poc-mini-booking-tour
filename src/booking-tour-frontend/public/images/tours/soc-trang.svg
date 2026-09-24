@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" role="img">
+<title>Chùa Khmer Sóc Trăng</title>
+<defs>
+<linearGradient id="stS" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#38BDF8"/><stop offset=".7" stop-color="#E0F2FE"/><stop offset="1" stop-color="#FEF3C7"/></linearGradient>
+<linearGradient id="stR" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EA580C"/><stop offset="1" stop-color="#C2410C"/></linearGradient>
+<g id="stP"><path d="M0 0q6-50-4-100" fill="none" stroke="#78350F" stroke-width="7" stroke-linecap="round"/><path d="M-4-100q-30-16-56 10q26-10 56-10zm0 0q30-16 56 10q-26-10-56-10zm0 0q-20-26-48-26q28 10 48 26zm0 0q20-26 48-26q-28 10-48 26z" fill="#15803D"/></g>
+<g id="stT"><path d="M-3 0h6l-1-150h-4z" fill="#57534E"/><circle cy="-158" r="24" fill="#166534"/><path d="M0-158l-36-6M0-158l34-12M0-158l-26 26M0-158l28 22M0-158l-4-34M0-158l-30-24M0-158l26-26" stroke="#15803D" stroke-width="5" stroke-linecap="round"/></g>
+</defs>
+<rect width="800" height="500" fill="url(#stS)"/>
+<path d="M90 110a24 24 0 0 1 46-8a18 18 0 0 1 32 10h-78zM600 80a22 22 0 0 1 42-6a16 16 0 0 1 30 10h-72z" fill="#FFF"/>
+<path d="M0 404v-40q40-26 80-4q40-30 90-2q40-24 80 0v46zM550 404v-46q40-26 80 0q40-30 90 0q40-22 80 2v44z" fill="#166534"/>
+<rect y="400" width="800" height="100" fill="#65A30D"/>
+<path d="M0 440q200-20 400 0t400 0v60H0z" fill="#4D7C0F"/>
+<path d="M394 134L400 84L406 134z" fill="#FBBF24"/>
+<path d="M210 412h380v-22H210z" fill="#E7E5E4"/>
+<path d="M360 412h80l-6-22h-68z" fill="#D6D3D1"/>
+<rect x="250" y="320" width="300" height="70" fill="#FEF3C7"/>
+<path d="M262 320h8v70h-8zM322 320h8v70h-8zM470 320h8v70h-8zM530 320h8v70h-8z" fill="#F59E0B"/>
+<path d="M290 340h20v26h-20zM490 340h20v26h-20z" fill="#9A3412"/>
+<path d="M380 390v-40q20-20 40 0v40z" fill="#9A3412" stroke="#FBBF24" stroke-width="3"/>
+<path d="M216 326H584L530 282H270z" fill="url(#stR)"/>
+<path d="M262 286H538L490 242H310z" fill="#EA580C"/>
+<path d="M306 246H494L452 196H348z" fill="url(#stR)"/>
+<path d="M348 198L400 130L452 198z" fill="#EA580C" stroke="#FBBF24" stroke-width="4" stroke-linejoin="round"/>
+<path d="M374 196L400 160L426 196z" fill="#FBBF24"/>
+<circle cx="400" cy="182" r="5" fill="#C2410C"/>
+<path d="M216 326H584M262 286H538M306 246H494M270 282H530M310 242H490" stroke="#FBBF24" stroke-width="4"/>
+<path d="M216 326q-18-4-22-24M584 326q18-4 22-24M262 286q-16-4-20-22M538 286q16-4 20-22M306 246q-14-4-18-20M494 246q14-4 18-20M348 198q-10-2-14-14M452 198q10-2 14-14" fill="none" stroke="#FBBF24" stroke-width="5" stroke-linecap="round"/>
+<use href="#stT" transform="translate(40 404) scale(.9)"/>
+<use href="#stT" transform="translate(770 404) scale(.95)"/>
+<use href="#stP" transform="translate(120 420) scale(1.6)"/>
+<use href="#stP" transform="translate(185 416) scale(-1.2 1.2)"/>
+<use href="#stP" transform="translate(680 420) scale(-1.7 1.7)"/>
+<use href="#stP" transform="translate(615 416) scale(1.15)"/>
+<path d="M300 70q8-8 16 0q8-8 16 0M350 96q6-6 12 0q6-6 12 0" fill="none" stroke="#475569" stroke-width="2.5" stroke-linecap="round"/>
+</svg>
